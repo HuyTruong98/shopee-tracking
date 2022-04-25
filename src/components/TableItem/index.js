@@ -1,12 +1,34 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { APP_API_IMAGE } from '../../configs';
+import PaginationCommon from '../Pagination';
 
 function TableItem({ listSearchItem }) {
+  
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  let NUM_OF_RECORDS = listSearchItem.length;
+  let LIMIT = 10;
+
+  const onPageChanged = useCallback(
+    (event, page) => {
+      event.preventDefault();
+      setCurrentPage(page);
+    },
+    [currentPage]
+  );
+
+  const currentComments = listSearchItem.slice(
+    (currentPage - 1) * LIMIT,
+    (currentPage - 1) * LIMIT + LIMIT
+  );
+
   return (
     <>
       <div className="title-page">Shopee Tracking</div>
@@ -61,10 +83,10 @@ function TableItem({ listSearchItem }) {
                 <th>Buff</th>
               </tr>
             </thead>
-            {listSearchItem.map((itemProduct, indexProduct) => {
-              return (
-                <tbody key={indexProduct}>
-                  <tr>
+            <tbody>
+              {currentComments.map((itemProduct, indexProduct) => {
+                return (
+                  <tr key={indexProduct}>
                     <td>{indexProduct + 1}</td>
                     <td>{itemProduct.item_basic.name}</td>
                     <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
@@ -94,10 +116,19 @@ function TableItem({ listSearchItem }) {
                     </td>
                     <td>buff</td>
                   </tr>
-                </tbody>
-              );
-            })}
+                );
+              })}
+            </tbody>
           </table>
+          {NUM_OF_RECORDS > 0 && (
+            <PaginationCommon
+              totalRecords={NUM_OF_RECORDS}
+              pageLimit={LIMIT}
+              pageNeighbours={1}
+              onPageChanged={onPageChanged}
+              currentPage={currentPage}
+            />
+          )}
         </div>
         <div style={{ width: '1%' }} />
       </div>

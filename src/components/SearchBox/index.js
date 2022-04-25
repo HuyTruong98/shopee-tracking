@@ -8,7 +8,7 @@ function SearchBox({ setListSearchItem }) {
   function handleSearch(data) {
     const params = {
       by: 'relevancy',
-      limit: 10,
+      limit: 100,
       newest: 0,
       order: 'desc',
       page_type: 'search',
@@ -30,7 +30,6 @@ function SearchBox({ setListSearchItem }) {
     <>
       <div className="header-search-items">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <a></a>
           <button
             className="navbar-toggler"
             type="button"
@@ -63,6 +62,9 @@ function SearchBox({ setListSearchItem }) {
                   Submit
                 </button>
               </form>
+            </div>
+            <div className="log-out" >
+              <button className="not-found">Log Out</button>
             </div>
           </div>
         </nav>
