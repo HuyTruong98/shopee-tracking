@@ -1,8 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { React, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import login from '../../api/ApiLoginClient';
+import { HOME_PAGE } from '../../configs';
+import toast from 'react-hot-toast';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -29,14 +32,18 @@ export default function LoginPage() {
   });
   const password = useRef({});
   password.current = watch('password', '');
+  const navigate = useNavigate();
 
-  function handleLogin(user) {
+  function handleLogin(data) {
     const loginUser = async () => {
       try {
-        await login.loginUser(user);
+        await login.loginUser(data);
         reset();
+        navigate(HOME_PAGE);
+        toast.success('Login is Success', { icon: '👏' });
       } catch (error) {
         console.log(error);
+        toast.error('Wrong Email or Password !');
       }
     };
     loginUser();
@@ -52,8 +59,8 @@ export default function LoginPage() {
           <h1 className="h3 mb-3 font-weight-normal">Login Page</h1>
         </div>
 
-        <div className="form-label-group ">
-          <label for="inputEmail">Email address!</label>
+        <div className="form-label-group">
+          <label for="inputEmail">* Email address</label>
           <input
             className="form-control"
             type="email"
@@ -61,12 +68,12 @@ export default function LoginPage() {
             placeholder="Enter your email..."
             {...register('email')}
           />
-          <p className="my-4 text-red-500">
+          <p className="error-text">
             {errors.email && errors.email.message}
           </p>
         </div>
         <div className="form-label-group">
-          <label for="inputPassword">Password!</label>
+          <label for="inputPassword">* Password</label>
           <input
             className="form-control"
             type="password"
@@ -74,7 +81,7 @@ export default function LoginPage() {
             placeholder="Enter your password..."
             {...register('password')}
           />
-          <p classNameName="my-4 text-red-500">
+          <p classNameName="error-text" style={{ paddingLeft: '5px', color: 'red' }}>
             {errors.password && errors.password.message}
           </p>
         </div>

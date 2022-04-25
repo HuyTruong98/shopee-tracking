@@ -1,9 +1,34 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import productsApi from '../../api/ApiProductClient';
+import { useStore, actions } from '../../store';
+import login from '../../api/ApiLoginClient';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { LOGIN_PAGE } from '../../configs';
 
 function SearchBox({ setListSearchItem }) {
   const { register, handleSubmit } = useForm();
+  const [state, dispatch] = useStore();
+  const navigate = useNavigate();
+  const refreshToken =
+    JSON.stringify(localStorage.getItem('REFRESHTOKEN'))
+      ? JSON.stringify(localStorage.getItem('REFRESHTOKEN'))
+      : "";
+
+  function handleLogOut() {
+    const logout = async () => {
+      try {
+        await login.logoutUser(JSON.parse(refreshToken));
+        dispatch(actions.setUserLogout({ status: false }));
+        toast.success('Logout is Success', { icon: '👏' });
+        navigate(LOGIN_PAGE);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    logout();
+  }
 
   function handleSearch(data) {
     const params = {
@@ -64,6 +89,11 @@ function SearchBox({ setListSearchItem }) {
                 </button>
               </form>
             </div>
+          </div>
+          <div className="log-out" onClick={handleLogOut}>
+            <button className="not-found">
+              Log Out
+            </button>
           </div>
         </nav>
         <div className="example-search navbar-light bg-light">
