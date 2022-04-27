@@ -4,7 +4,7 @@ import React from 'react';
 import { APP_API_IMAGE } from '../../configs';
 import Pagination from '../Pagination';
 
-function TableItem({ listSearchItem, onFilter, paginate,onChangeCurrentPage }) {
+function TableItem({ listItems, onSetParams, pageCount,onChangeCurrentPage }) {
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
@@ -12,7 +12,7 @@ function TableItem({ listSearchItem, onFilter, paginate,onChangeCurrentPage }) {
 
   function handleChangeLimit(e) {
     const number = Number(e.target.value);
-    onFilter({limit: number, newest: 0});
+    onSetParams({limit:number});
   }
 
   return (
@@ -72,7 +72,7 @@ function TableItem({ listSearchItem, onFilter, paginate,onChangeCurrentPage }) {
               </tr>
             </thead>
             <tbody>
-              {listSearchItem.map((itemProduct, indexProduct) => {
+              {listItems.map((itemProduct, indexProduct) => {
                 return (
                   <tr key={indexProduct}>
                     <td>{indexProduct + 1}</td>
@@ -108,7 +108,7 @@ function TableItem({ listSearchItem, onFilter, paginate,onChangeCurrentPage }) {
               })}
             </tbody>
           </table>
-          <Pagination paginate={paginate} onChangeCurrentPage={onChangeCurrentPage}/>
+          <Pagination pageCount={pageCount} onChangeCurrentPage={onChangeCurrentPage}/>
         </div>
         <div style={{ width: '1%' }} />
       </div>

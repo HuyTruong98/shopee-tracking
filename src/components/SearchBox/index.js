@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import login from '../../api/ApiLoginClient';
 import { LOGIN_PAGE } from '../../configs';
 
-function SearchBox({ setFilter }) {
+function SearchBox({ onSearchProducts }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const refreshToken = localStorage.getItem('REFRESHTOKEN');
@@ -22,7 +22,7 @@ function SearchBox({ setFilter }) {
   }
 
   function handleSearch(data) {
-    setFilter((prevFilter) => ({ ...prevFilter, keyword: data.search }));
+    onSearchProducts({keyword: data.search });
   }
 
   return (

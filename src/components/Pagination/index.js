@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 
-function Pagination({ paginate,onChangeCurrentPage }) {
+function Pagination({ pageCount,onChangeCurrentPage }) {
  
   return (
     <div>
@@ -9,7 +9,7 @@ function Pagination({ paginate,onChangeCurrentPage }) {
         previousLabel={'< Previous'}
         nextLabel={'Next >'}
         breakLabel="..."
-        pageCount={paginate}
+        pageCount={pageCount}
         marginPagesDisplayed={0}
         pageRangeDisplayed={5}
         containerClassName={'pagination justify-content-end mt-5'}

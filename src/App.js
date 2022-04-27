@@ -19,9 +19,10 @@ function App() {
       exact: true,
       path: HOME_PAGE,
       element: (
-        <ProtectedRoute pathRedirect={LOGIN_PAGE}>
-          <HomePage />
+        <ProtectedRoute>
+            <HomePage />
         </ProtectedRoute>
+       
       ),
     },
     {
