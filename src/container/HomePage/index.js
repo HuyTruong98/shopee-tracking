@@ -4,6 +4,7 @@ import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
 import TableItem from '../../components/TableItem';
 import useLoading from '../../hooks/userLoading';
+import toast from 'react-hot-toast';
 
 function HomePage() {
   const [term, setTerm] = useState('');
@@ -66,7 +67,8 @@ function HomePage() {
           hideLoading();
         } catch (error) {
           showLoading();
-          console.log('Failed to Fetch Product', error);
+          toast.success('Failed to Fetch Product !');
+          hideLoading();
         }
       };
       getProductSearch();

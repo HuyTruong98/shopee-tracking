@@ -15,7 +15,6 @@ function TableItem({
   filteredTerms,
   term,
 }) {
-  console.log(term);
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');

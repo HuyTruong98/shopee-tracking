@@ -9,6 +9,7 @@ import { HOME_PAGE } from '../../configs';
 import useLoading from '../../hooks/userLoading';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -55,10 +56,10 @@ export default function LoginPage() {
         reset();
         navigate(HOME_PAGE);
         hideLoading();
+        toast.success('Logged in successfully');
       } catch (error) {
         showLoading();
-        hideLoading();
-        console.log(error);
+        toast.success('Login failed, please check your email and password');
       }
     };
     loginUser();

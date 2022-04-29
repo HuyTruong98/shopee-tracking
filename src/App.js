@@ -7,6 +7,7 @@ import LoginPage from './container/LoginPage';
 import NotFoundPage from './container/NotFoundPage';
 import ProtectedRoute from './configs/ProtedRouter';
 import OverLayProvider from './components/OverLay/provider';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const r = [
@@ -43,6 +44,7 @@ function App() {
             />
           ))}
         </Routes>
+        <Toaster />
       </Router>
     </OverLayProvider>
   );

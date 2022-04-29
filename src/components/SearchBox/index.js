@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import login from '../../api/ApiLoginClient';
 import { LOGIN_PAGE } from '../../configs';
+import toast from 'react-hot-toast';
 
 function SearchBox({ onFilter }) {
   const { register, handleSubmit } = useForm();
@@ -14,8 +15,9 @@ function SearchBox({ onFilter }) {
       try {
         await login.logoutUser(refreshToken);
         navigate(LOGIN_PAGE);
+        toast.success('successful logout')
       } catch (error) {
-        console.log('Log out fail', error);
+        toast.success('Log out fail')
       }
     };
     logoutUser();
