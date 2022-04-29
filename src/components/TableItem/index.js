@@ -38,7 +38,7 @@ function TableItem({
           <select
             name="example_length"
             aria-controls="example"
-            class="form-control input-sm"
+            className="form-control input-sm"
             value={term}
             onChange={(e) => handleChangeLimit(e)}
             defaultValue="10"
