@@ -6,7 +6,7 @@ const productsApi = {
     const resource = '/shopee-tracking';
     const query = queryString.stringify(params);
     return axiosClient.post(resource, { query }).then((res) => {
-      return res && res.items;
+      return res;
     });
   },
 };

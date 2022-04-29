@@ -1,11 +1,33 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { APP_API_IMAGE } from '../../configs';
+import Pagination from '../Pagination';
 
-function TableItem({ listSearchItem }) {
+function TableItem({
+  listProduct,
+  onChangeCurrentPage,
+  onChangeListSearch,
+  setCurrentPage,
+  pageCount,
+  showPageCount,
+  resetCurrentPage,
+  filteredTerms,
+  term,
+}) {
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }
+
+  function handleChangeLimit(e) {
+    const number = Number(e.target.value);
+    setCurrentPage(number);
+    showPageCount(number);
+  }
+
+  function handleChangeList(e) {
+    onChangeListSearch(e.target.value);
   }
   return (
     <>
@@ -16,7 +38,10 @@ function TableItem({ listSearchItem }) {
           <select
             name="example_length"
             aria-controls="example"
-            class="form-control input-sm"
+            className="form-control input-sm"
+            value={term}
+            onChange={(e) => handleChangeLimit(e)}
+            defaultValue="10"
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -31,6 +56,7 @@ function TableItem({ listSearchItem }) {
             placeholder="Search"
             aria-label="Search"
             className="form-control"
+            onChange={handleChangeList}
           />
         </div>
       </div>
@@ -61,43 +87,50 @@ function TableItem({ listSearchItem }) {
                 <th>Buff</th>
               </tr>
             </thead>
-            {listSearchItem.map((itemProduct, indexProduct) => {
-              return (
-                <tbody key={indexProduct}>
-                  <tr>
-                    <td>{indexProduct + 1}</td>
-                    <td>{itemProduct.item_basic.name}</td>
-                    <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
-                    <td></td>
-                    <td>25</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>11314 </td>
-                    <td>36,502,675 </td>
-                    <td>14</td>
-                    <td>16</td>
-                    <td>0.9</td>
-                    <td>
-                      <img
-                        src={`${APP_API_IMAGE}/${itemProduct.item_basic.image}`}
-                        style={{ width: '50px', height: '50px' }}
-                      />
-                    </td>
-                    <td>
-                      <a
-                        href="https://shopee.vn/item-i.85907828.5549563273"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Xem
-                      </a>
-                    </td>
-                    <td>buff</td>
-                  </tr>
-                </tbody>
-              );
-            })}
+            <tbody>
+              {(term === '' ? listProduct : filteredTerms)?.map(
+                (itemProduct, indexProduct) => {
+                  return (
+                    <tr key={indexProduct}>
+                      <td>{indexProduct + 1}</td>
+                      <td>{itemProduct.item_basic.name}</td>
+                      <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
+                      <td></td>
+                      <td>25</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>11314 </td>
+                      <td>36,502,675 </td>
+                      <td>14</td>
+                      <td>16</td>
+                      <td>0.9</td>
+                      <td>
+                        <img
+                          src={`${APP_API_IMAGE}/${itemProduct.item_basic.image}`}
+                          style={{ width: '50px', height: '50px' }}
+                        />
+                      </td>
+                      <td>
+                        <a
+                          href={`https://shopee.vn/item-i.${itemProduct.shopid}.${itemProduct.itemid}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Xem
+                        </a>
+                      </td>
+                      <td>buff</td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
           </table>
+          <Pagination
+            pageCount={pageCount}
+            onChangeCurrentPage={onChangeCurrentPage}
+            resetCurrentPage={resetCurrentPage}
+          />
         </div>
         <div style={{ width: '1%' }} />
       </div>

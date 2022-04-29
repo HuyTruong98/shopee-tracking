@@ -1,4 +1,3 @@
-
 .example-search {
   width: 100%;
   padding-left: 70px;
@@ -29,11 +28,56 @@
 }
 
 .background-makeup {
-  padding-top: 140px;
+  padding-top: 90px;
   background: url(./assets/images/Background.jpg);
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center; 
+  background-position: center;
   height: 100vh;
   width: 100%;
+}
+.log-out {
+  text-align: center;
+  display: flex;
+}
+.log-out button {
+  color: #fff;
+  background-color: rgba(255, 0, 0, 0.4);
+  width: 80px;
+  height: 40px;
+  border-color: rgba(226, 232, 240, 0.3);
+  border-width: 1px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+    rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+    rgba(0, 0, 0, 0.07) 0px 16px 16px;
+  border-radius: 5px;
+}
+.navbar-expand-lg .navbar-collapse {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+.form-signin {
+  padding: 40px;
+  box-shadow: rgb(17 17 26 / 10%) 0px 8px 24px,
+    rgb(17 17 26 / 10%) 0px 16px 56px, rgb(17 17 26 / 10%) 0px 24px 80px;
+  background: rgb(255, 255, 255, 0.5);
+}
+.form-signin {
+  padding: 40px;
+  box-shadow: rgb(17 17 26 / 10%) 0px 8px 24px,
+    rgb(17 17 26 / 10%) 0px 16px 56px, rgb(17 17 26 / 10%) 0px 24px 80px;
+  background: rgb(255, 255, 255, 0.5);
+}
+.btn-lg {
+  margin: 30px 0;
+}
+.form-label-group {
+  position: relative;
+}
+.icon-pass {
+  position: absolute;
+  top: 55%;
+  right: 10px;
+  cursor: pointer;
 }

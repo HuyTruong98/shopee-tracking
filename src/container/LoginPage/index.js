@@ -1,8 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { React, useRef } from 'react';
+import { React, useRef, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import login from '../../api/ApiLoginClient';
+import { HOME_PAGE } from '../../configs';
+import useLoading from '../../hooks/userLoading';
+import { FaEye } from 'react-icons/fa';
+import { FaEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -28,19 +35,43 @@ export default function LoginPage() {
     resolver: yupResolver(schema),
   });
   const password = useRef({});
+  const navigate = useNavigate();
+  const token = localStorage.getItem('TOKEN') ?? null;
+  const [showLoading, hideLoading] = useLoading();
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+
+  useEffect(() => {
+    if (token !== null) {
+      navigate(HOME_PAGE);
+    }
+  }, [token]);
+
   password.current = watch('password', '');
 
   function handleLogin(user) {
     const loginUser = async () => {
       try {
+        showLoading();
         await login.loginUser(user);
         reset();
+        navigate(HOME_PAGE);
+        hideLoading();
+        toast.success('Logged in successfully');
       } catch (error) {
-        console.log(error);
+        showLoading();
+        toast.success('Login failed, please check your email and password');
       }
     };
     loginUser();
   }
+
+  const handleShowPass = () => {
+    if (isPasswordShown) {
+      setIsPasswordShown(false);
+    } else {
+      setIsPasswordShown(true);
+    }
+  };
 
   return (
     <div className="form-login background-makeup">
@@ -69,11 +100,14 @@ export default function LoginPage() {
           <label for="inputPassword">Password!</label>
           <input
             className="form-control"
-            type="password"
+            type={isPasswordShown ? 'hide' : 'password'}
             name="password"
             placeholder="Enter your password..."
             {...register('password')}
           />
+          <div className="icon-pass" onClick={handleShowPass}>
+            {isPasswordShown ? <FaEye /> : <FaEyeSlash />}
+          </div>
           <p classNameName="my-4 text-red-500">
             {errors.password && errors.password.message}
           </p>
