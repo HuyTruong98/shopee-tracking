@@ -37,3 +37,25 @@
   height: 100vh;
   width: 100%;
 }
+.log-out {
+  text-align: center;
+  display: flex;
+}
+.log-out button {
+  color: #fff;
+  background-color: rgba(255, 0, 0, 0.4);
+  width: 80px;
+  height: 40px;
+  border-color: rgba(226, 232, 240, 0.3);
+  border-width: 1px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+    rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+    rgba(0, 0, 0, 0.07) 0px 16px 16px;
+  border-radius: 5px;
+}
+.navbar-expand-lg .navbar-collapse {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+

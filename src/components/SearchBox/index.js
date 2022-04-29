@@ -1,36 +1,34 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import productsApi from '../../api/ApiProductClient';
+import { useNavigate } from 'react-router-dom';
+import login from '../../api/ApiLoginClient';
+import { LOGIN_PAGE } from '../../configs';
 
-function SearchBox({ setListSearchItem }) {
+function SearchBox({ onFilter }) {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const refreshToken = localStorage.getItem('REFRESHTOKEN');
 
-  function handleSearch(data) {
-    const params = {
-      by: 'relevancy',
-      limit: 10,
-      newest: 0,
-      order: 'desc',
-      page_type: 'search',
-      scenario: 'PAGE_GLOBAL_SEARCH',
-      version: 2,
-      keyword: data.search,
-    };
-    const getItemSearch = async () => {
+  function handleLogout() {
+    const logoutUser = async () => {
       try {
-        const response = await productsApi.searchItem(params);
-        setListSearchItem(response);
+        await login.logoutUser(refreshToken);
+        navigate(LOGIN_PAGE);
       } catch (error) {
-        console.log('Failed to Fetch Product', error);
+        console.log('Log out fail', error);
       }
     };
-    getItemSearch();
+    logoutUser();
   }
+
+  function handleSearch(data) {
+    onFilter({ keyword: data.search });
+  }
+
   return (
     <>
       <div className="header-search-items">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <a></a>
           <button
             className="navbar-toggler"
             type="button"
@@ -63,6 +61,9 @@ function SearchBox({ setListSearchItem }) {
                   Submit
                 </button>
               </form>
+            </div>
+            <div className="log-out" onClick={handleLogout}>
+              <button className="not-found">Log Out</button>
             </div>
           </div>
         </nav>

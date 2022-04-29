@@ -1,11 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { APP_API_IMAGE } from '../../configs';
+import Pagination from '../Pagination';
 
-function TableItem({ listSearchItem }) {
+function TableItem({
+  listProduct,
+  onChangeCurrentPage,
+  onChangeListSearch,
+  setCurrentPage,
+  pageCount,
+  showPageCount,
+  resetCurrentPage,
+}) {
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }
+
+  function handleChangeLimit(e) {
+    const number = Number(e.target.value);
+    setCurrentPage(number);
+    showPageCount(number);
+  }
+
+  function handleChangeList(e) {
+    onChangeListSearch(e.target.value);
   }
   return (
     <>
@@ -17,6 +37,8 @@ function TableItem({ listSearchItem }) {
             name="example_length"
             aria-controls="example"
             class="form-control input-sm"
+            onChange={handleChangeLimit}
+            defaultValue="10"
           >
             <option value="10">10</option>
             <option value="25">25</option>
@@ -31,6 +53,7 @@ function TableItem({ listSearchItem }) {
             placeholder="Search"
             aria-label="Search"
             className="form-control"
+            onChange={handleChangeList}
           />
         </div>
       </div>
@@ -61,10 +84,10 @@ function TableItem({ listSearchItem }) {
                 <th>Buff</th>
               </tr>
             </thead>
-            {listSearchItem.map((itemProduct, indexProduct) => {
-              return (
-                <tbody key={indexProduct}>
-                  <tr>
+            <tbody>
+              {listProduct.map((itemProduct, indexProduct) => {
+                return (
+                  <tr key={indexProduct}>
                     <td>{indexProduct + 1}</td>
                     <td>{itemProduct.item_basic.name}</td>
                     <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
@@ -85,7 +108,7 @@ function TableItem({ listSearchItem }) {
                     </td>
                     <td>
                       <a
-                        href="https://shopee.vn/item-i.85907828.5549563273"
+                        href={`https://shopee.vn/item-i.${itemProduct.shopid}.${itemProduct.itemid}`}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -94,10 +117,15 @@ function TableItem({ listSearchItem }) {
                     </td>
                     <td>buff</td>
                   </tr>
-                </tbody>
-              );
-            })}
+                );
+              })}
+            </tbody>
           </table>
+          <Pagination
+            pageCount={pageCount}
+            onChangeCurrentPage={onChangeCurrentPage}
+            resetCurrentPage={resetCurrentPage}
+          />
         </div>
         <div style={{ width: '1%' }} />
       </div>

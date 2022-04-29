@@ -1,6 +1,4 @@
 import axiosClient from './ApiAxiosClient';
-import history from '../utils/history';
-import { HOME_PAGE } from '../configs';
 
 const login = {
   loginUser: (params) => {
@@ -9,8 +7,19 @@ const login = {
       if (res) {
         localStorage.setItem('USER', JSON.stringify(res.user));
         localStorage.setItem('TOKEN', res.tokens.access.token);
-        history.push(HOME_PAGE);
+        localStorage.setItem('REFRESHTOKEN', res.tokens.refresh.token);
         return res && res.user;
+      }
+    });
+  },
+  logoutUser: (params) => {
+    const resource = '/auth/logout';
+    const Token = { refreshToken: params };
+    return axiosClient.post(resource, Token).then((res) => {
+      if (res) {
+        localStorage.removeItem('USER');
+        localStorage.removeItem('TOKEN');
+        localStorage.removeItem('REFRESHTOKEN');
       }
     });
   },

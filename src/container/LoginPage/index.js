@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { React, useRef } from 'react';
+import { React, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import login from '../../api/ApiLoginClient';
+import { HOME_PAGE } from '../../configs';
+import useLoading from '../../hooks/userLoading';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -28,14 +32,28 @@ export default function LoginPage() {
     resolver: yupResolver(schema),
   });
   const password = useRef({});
+  const navigate = useNavigate();
+  const token = localStorage.getItem('TOKEN') ?? null;
+  const [showLoading, hideLoading] = useLoading();
+
+  useEffect(() => {
+    if (token !== null) {
+      navigate(HOME_PAGE);
+    }
+  }, [token]);
+
   password.current = watch('password', '');
 
   function handleLogin(user) {
     const loginUser = async () => {
       try {
+        showLoading();
         await login.loginUser(user);
         reset();
+        navigate(HOME_PAGE);
+        hideLoading();
       } catch (error) {
+        showLoading();
         console.log(error);
       }
     };
