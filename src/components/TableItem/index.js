@@ -12,7 +12,10 @@ function TableItem({
   pageCount,
   showPageCount,
   resetCurrentPage,
+  filteredTerms,
+  term,
 }) {
+  console.log(term);
   function handleChangePrice(value) {
     const number = value.toString();
     return number.slice(0, 7).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
@@ -37,7 +40,8 @@ function TableItem({
             name="example_length"
             aria-controls="example"
             class="form-control input-sm"
-            onChange={handleChangeLimit}
+            value={term}
+            onChange={(e) => handleChangeLimit(e)}
             defaultValue="10"
           >
             <option value="10">10</option>
@@ -85,40 +89,42 @@ function TableItem({
               </tr>
             </thead>
             <tbody>
-              {listProduct.map((itemProduct, indexProduct) => {
-                return (
-                  <tr key={indexProduct}>
-                    <td>{indexProduct + 1}</td>
-                    <td>{itemProduct.item_basic.name}</td>
-                    <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
-                    <td></td>
-                    <td>25</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>11314 </td>
-                    <td>36,502,675 </td>
-                    <td>14</td>
-                    <td>16</td>
-                    <td>0.9</td>
-                    <td>
-                      <img
-                        src={`${APP_API_IMAGE}/${itemProduct.item_basic.image}`}
-                        style={{ width: '50px', height: '50px' }}
-                      />
-                    </td>
-                    <td>
-                      <a
-                        href={`https://shopee.vn/item-i.${itemProduct.shopid}.${itemProduct.itemid}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Xem
-                      </a>
-                    </td>
-                    <td>buff</td>
-                  </tr>
-                );
-              })}
+              {(term === '' ? listProduct : filteredTerms)?.map(
+                (itemProduct, indexProduct) => {
+                  return (
+                    <tr key={indexProduct}>
+                      <td>{indexProduct + 1}</td>
+                      <td>{itemProduct.item_basic.name}</td>
+                      <td>{handleChangePrice(itemProduct.item_basic.price)}</td>
+                      <td></td>
+                      <td>25</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>11314 </td>
+                      <td>36,502,675 </td>
+                      <td>14</td>
+                      <td>16</td>
+                      <td>0.9</td>
+                      <td>
+                        <img
+                          src={`${APP_API_IMAGE}/${itemProduct.item_basic.image}`}
+                          style={{ width: '50px', height: '50px' }}
+                        />
+                      </td>
+                      <td>
+                        <a
+                          href={`https://shopee.vn/item-i.${itemProduct.shopid}.${itemProduct.itemid}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Xem
+                        </a>
+                      </td>
+                      <td>buff</td>
+                    </tr>
+                  );
+                }
+              )}
             </tbody>
           </table>
           <Pagination

@@ -1,11 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
 import TableItem from '../../components/TableItem';
 import useLoading from '../../hooks/userLoading';
 
 function HomePage() {
+  const [term, setTerm] = useState('');
+  const [filteredTerms, setFilteredTerms] = useState([]); //state cua search
+  const timeOut = useRef(0);
+  const isFirst = useRef(true);
   const [showLoading, hideLoading] = useLoading();
   const [listSearchItem, setListSearchItem] = useState([]);
   const [listProduct, setListProduct] = useState([]);
@@ -46,10 +50,8 @@ function HomePage() {
     }
   }
 
-  //search table
   function onChangeListSearch(value) {
-    //search table
-    console.log(value);
+    setTerm(value);
   }
 
   useEffect(() => {
@@ -72,6 +74,33 @@ function HomePage() {
   }, [filter]);
 
   useEffect(() => {
+    if (isFirst.current) {
+      isFirst.current = false;
+    } else {
+      clearTimeout(timeOut.current);
+      timeOut.current = setTimeout(() => {
+        const filteredItems = listProduct.filter((item) => {
+          return item.item_basic.name
+            .trim()
+            .normalize('NFD')
+            .replace(/\p{Diacritic}/gu, '')
+            .toString()
+            .toLowerCase()
+            .includes(
+              term
+                .trim()
+                .normalize('NFD')
+                .replace(/\p{Diacritic}/gu, '')
+                .toString()
+                .toLowerCase()
+            );
+        });
+        setFilteredTerms(filteredItems);
+      }, 300);
+    }
+  }, [term]);
+
+  useEffect(() => {
     const offSet = (pageCount - 1) * currentPage;
     const perPage = pageCount * currentPage;
     const newArr = listSearchItem.slice(offSet, perPage);
@@ -88,6 +117,8 @@ function HomePage() {
         pageCount={pageCount}
         showPageCount={showPageCount}
         resetCurrentPage={resetCurrentPage}
+        term={term}
+        filteredTerms={filteredTerms}
       />
     </>
   );
