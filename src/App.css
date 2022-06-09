@@ -59,17 +59,6 @@
   justify-content: space-between !important;
 }
 
-.icon-default {
-  color: #ddd;
-  font-size: 20px;
-  cursor: pointer;
-  text-align: right;
-}
-
-.icon-default:active {
-  color: rgba(206, 186, 186, 0.33);
-}
-
 .cursor {
   cursor: pointer;
 }
@@ -80,4 +69,33 @@
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   border-radius: 8px;
+}
+
+thead button {
+  border: none;
+  background: white;
+  width: 100%;
+  font-weight: bold;
+}
+
+thead th.ascending::after {
+  content: '👇';
+  display: inline-block;
+  margin-left: 1em;
+  width: 100%;
+}
+
+thead th.descending::after {
+  width: 100%;
+  content: '☝️';
+  display: inline-block;
+  margin-left: 1em;
+}
+
+tbody td {
+  padding: 0.5em;
+}
+
+tbody tr:hover {
+  background-color: #eee;
 }

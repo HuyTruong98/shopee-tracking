@@ -1,0 +1,120 @@
+/* menu */
+
+@media (max-width: 776px) {
+  .navMenuShow {
+    transform: translateX(0);
+    animation: menuShow 0.4s ease-in;
+  }
+  .navMenuHidden {
+    transform: translateX(100%);
+    animation: menuHidden 0.4s ease-in;
+  }
+}
+
+@keyframes menuShow {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes menuHidden {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* round */
+.roundOutSide {
+  animation: roundOutSide 1.5s ease-in infinite alternate;
+}
+.roundCenter {
+  animation: roundCenter 1.5s ease-in infinite alternate;
+}
+@keyframes roundOutSide {
+  from {
+    border: 1px solid #ffffff;
+  }
+  to {
+    border: 14px solid #ffffff;
+  }
+}
+@keyframes roundCenter {
+  from {
+    border: 10px solid #f3ebff;
+  }
+  to {
+    border: 4px solid #f3ebff;
+  }
+}
+.dialog {
+  animation: dialog 0.1s ease-in;
+}
+@keyframes dialog {
+  from {
+    transform: scale(0.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.loginAnimation {
+  animation: loggin 0.2s ease-in-out;
+}
+@keyframes loggin {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+.viewDetail {
+  animation: viewDetail 0.2s ease-in-out;
+}
+@keyframes viewDetail {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+/* dialog */
+.toast {
+  animation: coundown 3s ease-in;
+}
+.slideShow {
+  animation: slideShow 6s ease;
+  transform: translateX(200%);
+}
+@keyframes coundown {
+  0% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0px;
+  }
+}
+@keyframes slideShow {
+  0% {
+    transform: translateX(100%);
+  }
+  10% {
+    transform: translateX(-10%);
+  }
+  25% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}

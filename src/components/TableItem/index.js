@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable react/jsx-no-duplicate-props */
 import moment from 'moment';
-import React, { forwardRef, useEffect } from 'react';
-import { BiSortAlt2 } from 'react-icons/bi';
-import { array } from 'yup';
+import React, { forwardRef } from 'react';
 import { APP_API_IMAGE } from '../../configs';
 import Pagination from '../Pagination';
+import tableHeads from './data/tableHeads';
 
 function TableItem(
   {
@@ -15,25 +15,11 @@ function TableItem(
     pageCount,
     currentPage,
     onSetLimitProducts,
-    onChangeShowQuantityInMonth,
-    onChangeSortProductName,
-    onChangeSortProductOfPrice,
-    onChangeSortProductOfDiscount,
+    sorting,
+    iconSort,
   },
   ref
 ) {
-  function handleSortName() {
-    onChangeSortProductName();
-  }
-
-  function handleSortPrice() {
-    onChangeSortProductOfPrice();
-  }
-
-  function handleSortDisCount() {
-    onChangeSortProductOfDiscount();
-  }
-
   function showPrice(value) {
     const number = value.price.toString();
     return number
@@ -43,62 +29,11 @@ function TableItem(
   }
 
   function showRevenue(value) {
-    const number = value.price.toString().slice(0, 7);
-    const priceRevenue = Number(number);
-    return (priceRevenue * value.sold)
+    const revenue = value.showRevenue
+    return revenue
       .toString()
       .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-      .concat(value.currency);
-  }
-
-  function showInMonth(value) {
-    if (value) {
-      const currentMonth = moment().format('MM/YYYY');
-
-      if (
-        value?.shopid === value?.ratings?.shopid &&
-        value?.itemid &&
-        value?.ratings?.itemid
-      ) {
-        const arrList =
-          Array.isArray(value.ratings && value.ratings.ratings) &&
-          value.ratings.ratings.length > 0 &&
-          value.ratings.ratings.filter(
-            (item) =>
-              moment(+item.ctime.toString().concat('000')).format('MM/YYYY') ===
-              currentMonth
-          );
-        console.log(
-          (value.item_basic.sold / value.item_basic.cmt_count) * arrList.length
-        );
-        return (
-          <p>
-            {arrList
-              ? Math.ceil(
-                  (value.item_basic.sold / value.item_basic.cmt_count) *
-                    arrList.length
-                )
-              : 0}
-          </p>
-        );
-      }
-    }
-  }
-
-  function showFirstPost(value) {
-    // Past
-    const number = value.ctime.toString();
-    const date = number.concat('000');
-    const pastDay = moment(+date).format('DD');
-    const pastMonth = moment(+date).format('MM');
-    const pastYear = moment(+date).format('YYYY');
-    // Present
-    const presentDay = moment(new Date()).format('DD');
-    const presentMonth = moment(new Date()).format('MM');
-    const presentYear = moment(new Date()).format('YYYY');
-    const a = moment([presentYear, presentMonth - 1, presentDay]);
-    const b = moment([pastYear, pastMonth - 1, pastDay]);
-    return a.diff(b, 'days');
+      .concat(value.item_basic.currency);
   }
 
   function handleChangeLimit(e) {
@@ -110,12 +45,27 @@ function TableItem(
     onChangeListSearch(e.target.value);
   }
 
-  useEffect(() => {
-    for (let i = 0; i < listProduct.length; i += 1) {
-      if (typeof listProduct[i].ratings === 'undefined')
-        onChangeShowQuantityInMonth(listProduct[i]);
-    }
-  }, [listProduct]);
+  const RenderTableHeads = () => {
+    return tableHeads.map((tableHead, tableHeadKey) => {
+      return (
+        <th
+          key={tableHeadKey}
+          onClick={() => (tableHead.isSorting ? sorting(tableHead.type) : {})}
+          className={
+            tableHead.isSorting
+              ? iconSort[tableHead.type] !== 0
+                ? iconSort[tableHead.type] === 1
+                  ? 'ascending'
+                  : 'descending'
+                : ''
+              : ''
+          }
+        >
+          {tableHead.title}
+        </th>
+      );
+    });
+  };
   return (
     <>
       <div className="title-page">Shopee Tracking</div>
@@ -151,53 +101,15 @@ function TableItem(
         <div style={{ width: '1%' }} />
         <div style={{ width: '98%' }}>
           <table
-            id="example"
-            className="table table-striped table-bordered odd"
+            id="dtOrderExample"
+            class="table table-striped table-bordered table-sm"
+            cellspacing="0"
+            width="100%"
             style={{ width: '100%', marginTop: '30px' }}
-            role="row"
           >
             <thead>
               <tr>
-                <th>#</th>
-                <th className="cursor" onClick={handleSortName}>
-                  Tên sản phẩm <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor" onClick={handleSortPrice}>
-                  Giá <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor" onClick={handleSortDisCount}>
-                  Giảm <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Đã bán <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Trong tháng <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Tồn <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Số ngày đăng <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Doanh thu <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Comment <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Liked <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Rating <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Hình ảnh <BiSortAlt2 className="icon-default" />
-                </th>
-                <th className="cursor">
-                  Link Shopee <BiSortAlt2 className="icon-default" />
-                </th>
+                <RenderTableHeads />
               </tr>
             </thead>
             <tbody>
@@ -209,10 +121,10 @@ function TableItem(
                     <td>{showPrice(itemProduct.item_basic)}</td>
                     <td>{itemProduct.item_basic.discount}</td>
                     <td>{itemProduct.item_basic.sold}</td>
-                    <td>{showInMonth(itemProduct)}</td>
                     <td>{itemProduct.item_basic.stock}</td>
-                    <td>{showFirstPost(itemProduct.item_basic)}</td>
-                    <td>{showRevenue(itemProduct.item_basic)}</td>
+                    <td>{itemProduct.showInMonth}</td>
+                    <td>{itemProduct.showFirstPost}</td>
+                    <td>{showRevenue(itemProduct)}</td>
                     <td>{itemProduct.item_basic.cmt_count}</td>
                     <td>{itemProduct.item_basic.liked_count}</td>
                     <td>

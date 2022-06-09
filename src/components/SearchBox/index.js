@@ -10,7 +10,7 @@ function SearchBox({ onFilter }) {
   const refreshToken = localStorage.getItem('REFRESHTOKEN');
 
   function handleLogout() {
-    const logoutUser = async () => {
+    const logOutUser = async () => {
       try {
         await login.logoutUser(refreshToken);
         navigate(LOGIN_PAGE);
@@ -18,7 +18,7 @@ function SearchBox({ onFilter }) {
         console.log('Log out fail', error);
       }
     };
-    logoutUser();
+    logOutUser();
   }
 
   function handleSearch(data) {

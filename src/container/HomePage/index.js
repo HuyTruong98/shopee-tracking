@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
@@ -5,6 +6,12 @@ import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
 import TableItem from '../../components/TableItem';
 import useLoading from '../../hooks/userLoading';
+import { arraySort } from '../../utils/array';
+import { iconSortObject } from '../../utils/sortIcon';
+import { filterIconSort } from '../../utils/fiterIconSort';
+import { pagination } from '../../utils/pagination';
+import { showInMonth } from '../../utils/showInMonth';
+import moment from 'moment';
 
 function HomePage() {
   const isFirst = useRef(true);
@@ -15,7 +22,7 @@ function HomePage() {
   const [listSearchProduct, setListSearchProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [limitProducts, setLimitProducts] = useState(10);
-  const [pageCount, setPageCount] = useState(1); // tổng số trang
+  const [pageCount, setPageCount] = useState(1);
   const [filter, setFilter] = useState({
     by: 'relevancy',
     limit: 100,
@@ -26,50 +33,35 @@ function HomePage() {
     version: 2,
     keyword: '',
   });
+  const [iconSort, setIconSort] = useState({
+    name: 0,
+    price: 0,
+    discount: 0,
+    sold: 0,
+    stock: 0,
+    showRevenue: 0,
+    comment: 0,
+    liked: 0,
+    rating: 0,
+    priceRevenue: 0,
+    showFirstPost: 0,
+    showInMonth: 0,
+  });
 
-  const newListProduct = [];
-  const onChangeShowQuantityInMonth = async (value) => {
-    try {
-      showLoading();
-      const response = await productsApi.cmtSearchItem(value);
-      for (let i = 0; i < listProduct.length; i += 1) {
-        if (
-          listProduct[i].itemid === response.itemid &&
-          listProduct[i].shopid === response.shopid
-        ) {
-          newListProduct.push({
-            ...listProduct[i],
-            ratings: response,
-          });
-        }
-      }
-      if (newListProduct.length === limitProducts) {
-        setLisProduct(newListProduct);
-      }
-      hideLoading();
-    } catch (error) {
-      console.log('Failed to Fetch Product', error);
-    }
-  };
-
-  //thay đổi page
   function onChangeCurrentPage(tempPage) {
     setCurrentPage(tempPage.selected + 1);
   }
 
-  //thay đổi số lượng sản phẩm hiển thị trên 1 trang
   function onSetLimitProducts(value) {
     setLimitProducts(value);
   }
 
-  // tìm kiếm
   function onFilter(data) {
     setFilter((prevFilter) => ({ ...prevFilter, ...data }));
     inputRef.current.value = '';
     setListSearchProduct([]);
   }
 
-  //search table
   function onChangeListSearch(value) {
     if (value !== '') {
       const searchProduct = listProduct.filter(
@@ -85,28 +77,13 @@ function HomePage() {
     }
   }
 
-  function onChangeSortProductName() {
-    const newArrSort = listSearchItem.sort((a, b) =>
-      a.item_basic.name.localeCompare(b.item_basic.name)
-    );
-    setListSearchItem([...newArrSort]);
-  }
-
-  function onChangeSortProductOfPrice() {
-    const newArrSort = listSearchItem.sort((a, b) => {
-      const sortA = Number(a.item_basic.price.toString().slice(0, 7));
-      const sortB = Number(b.item_basic.price.toString().slice(0, 7));
-      return sortA - sortB;
-    });
-    setListSearchItem([...newArrSort]);
-  }
-
-  function onChangeSortProductOfDiscount() {
-    const newArrSort = listSearchItem.sort(
-      (a, b) => a.item_basic.raw_discount - b.item_basic.raw_discount
-    );
-    setListSearchItem([...newArrSort]);
-  }
+  const sorting = (value) => {
+    const newIconSorts = iconSortObject(iconSort, value);
+    setIconSort(newIconSorts);
+    const newIconSort = filterIconSort(newIconSorts, value);
+    const sorted = arraySort(listSearchItem, newIconSort, value);
+    setListSearchItem([...sorted]);
+  };
 
   //reset page về 0
   useEffect(() => {
@@ -119,11 +96,20 @@ function HomePage() {
 
   useEffect(() => {
     if (filter.keyword !== '') {
+      const idBear = JSON.parse(localStorage.getItem('USER'));
       const getProductSearch = async () => {
         try {
           showLoading();
-          const response = await productsApi.searchItem(filter);
-          setListSearchItem(response.items);
+          const promises = [];
+          const response = await productsApi.searchItem(filter, idBear.id);
+          for (let i = 0; i < response.items.length; i += 1) {
+            if (typeof response.items[i].ratings === 'undefined') {
+              promises.push(productsApi.cmtSearchItem(response.items[i]));
+            }
+          }
+          const dataCmt = await Promise.all(promises);
+          const newList = showInMonth(dataCmt, response);
+          setListSearchItem(newList);
           hideLoading();
         } catch (error) {
           showLoading();
@@ -136,18 +122,14 @@ function HomePage() {
 
   useEffect(() => {
     if (listSearchItem.length > 0) {
-      const tempArr =
-        listSearchProduct.length > 0 ? listSearchProduct : listSearchItem;
-      const offset = (currentPage - 1) * limitProducts;
-      const amountProducts = limitProducts * currentPage;
-      const newArr = tempArr.slice(
-        offset,
-        amountProducts === 0 ? limitProducts : amountProducts
+      const newPagination = pagination(
+        listSearchItem,
+        listSearchProduct,
+        currentPage,
+        limitProducts
       );
-      const page = tempArr.length / limitProducts;
-
-      setPageCount(page);
-      setLisProduct(newArr);
+      setPageCount(newPagination.page);
+      setLisProduct(newPagination.newArr);
     }
   }, [currentPage, listSearchItem, limitProducts, listSearchProduct]);
   return (
@@ -162,10 +144,8 @@ function HomePage() {
         currentPage={currentPage}
         onSetLimitProducts={onSetLimitProducts}
         ref={inputRef}
-        onChangeShowQuantityInMonth={onChangeShowQuantityInMonth}
-        onChangeSortProductName={onChangeSortProductName}
-        onChangeSortProductOfPrice={onChangeSortProductOfPrice}
-        onChangeSortProductOfDiscount={onChangeSortProductOfDiscount}
+        sorting={sorting}
+        iconSort={iconSort}
       />
     </>
   );

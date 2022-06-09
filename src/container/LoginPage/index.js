@@ -33,7 +33,7 @@ export default function LoginPage() {
   });
   const password = useRef({});
   const navigate = useNavigate();
-  const token = localStorage.getItem('TOKEN') ?? null;
+  const token = localStorage.getItem('ACCESSTOKEN') ?? null;
   const [showLoading, hideLoading] = useLoading();
 
   useEffect(() => {

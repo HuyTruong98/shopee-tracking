@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import axiosClient from './ApiAxiosClient';
 
 const login = {
@@ -5,10 +6,13 @@ const login = {
     const resource = '/auth/login';
     return axiosClient.post(resource, params).then((res) => {
       if (res) {
-        localStorage.setItem('USER', JSON.stringify(res.user));
-        localStorage.setItem('TOKEN', res.tokens.access.token);
-        localStorage.setItem('REFRESHTOKEN', res.tokens.refresh.token);
-        return res && res.user;
+        toast.success('Login Sucessfully !', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        localStorage.setItem('USER', JSON.stringify(res.data.user));
+        localStorage.setItem('ACCESSTOKEN', res.data.tokens.access.token);
+        localStorage.setItem('REFRESHTOKEN', res.data.tokens.refresh.token);
+        return res?.data && res?.data?.user;
       }
     });
   },
@@ -18,7 +22,7 @@ const login = {
     return axiosClient.post(resource, Token).then((res) => {
       if (res) {
         localStorage.removeItem('USER');
-        localStorage.removeItem('TOKEN');
+        localStorage.removeItem('ACCESSTOKEN');
         localStorage.removeItem('REFRESHTOKEN');
       }
     });

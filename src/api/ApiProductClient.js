@@ -2,12 +2,21 @@ import axiosClient from './ApiAxiosClient';
 import queryString from 'query-string';
 
 const productsApi = {
-  searchItem: (params) => {
-    const resource = '/shopee-tracking';
+  searchItem: (params, id) => {
+    const resource = `/shopee-tracking/${id}`;
     const query = queryString.stringify(params);
-    return axiosClient.post(resource, { query }).then((res) => {
-      return res;
-    });
+    return axiosClient
+      .post(resource, { query })
+      .then((res) => {
+        if (res) {
+          return res && res.data;
+        }
+      })
+      .catch((error) => {
+        if (error) {
+          console.log(error);
+        }
+      });
   },
 
   cmtSearchItem: (value) => {
