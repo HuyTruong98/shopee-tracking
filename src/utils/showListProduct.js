@@ -1,14 +1,16 @@
 import moment from 'moment';
 
-export function showInMonth(dataCmt, response) {
+export function showListProduct(dataCmt, response) {
   const newList = [];
+
   dataCmt.map((itemCmt) => {
-    response.items.map((itemList) => {
+    response.map((itemList) => {
       if (
         itemList?.shopid === itemCmt?.shopid &&
         itemList?.itemid === itemCmt?.itemid
       ) {
         const currentMonth = moment().format('MM/YYYY');
+
         const arrList =
           Array.isArray(itemCmt.data.ratings) &&
           itemCmt.data.ratings &&
@@ -18,7 +20,8 @@ export function showInMonth(dataCmt, response) {
               moment(+x.ctime.toString().concat('000')).format('MM/YYYY') ===
               currentMonth
           );
-        const date = itemList.item_basic.ctime.toString().concat('000');
+
+        const date = itemList.ctime.toString().concat('000');
         const pastDay = moment(+date).format('DD');
         const pastMonth = moment(+date).format('MM');
         const pastYear = moment(+date).format('YYYY');
@@ -30,21 +33,23 @@ export function showInMonth(dataCmt, response) {
         const b = moment([pastYear, pastMonth - 1, pastDay]);
 
         const strPrice = Number(
-          itemList.item_basic.price.toString().slice(0, 7)
+          itemList.price.toString().slice(0, 7)
         );
-        const revenue = strPrice * itemList.item_basic.sold;
+
+        const revenue = strPrice * itemList.sold;
 
         const newValue = {
           ...itemList,
           showInMonth: arrList
             ? Math.ceil(
-                (itemList.item_basic.sold / itemList.item_basic.cmt_count) *
-                  arrList.length
-              )
+              (itemList.sold / itemList.cmt_count) *
+              arrList.length
+            )
             : 0,
           showFirstPost: a.diff(b, 'days'),
           showRevenue: revenue,
         };
+
         newList.push(newValue);
       }
     });

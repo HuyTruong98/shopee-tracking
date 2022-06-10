@@ -10,8 +10,7 @@ import { arraySort } from '../../utils/array';
 import { iconSortObject } from '../../utils/sortIcon';
 import { filterIconSort } from '../../utils/fiterIconSort';
 import { pagination } from '../../utils/pagination';
-import { showInMonth } from '../../utils/showInMonth';
-import moment from 'moment';
+import { showListProduct } from '../../utils/showListProduct';
 
 function HomePage() {
   const isFirst = useRef(true);
@@ -64,12 +63,10 @@ function HomePage() {
 
   function onChangeListSearch(value) {
     if (value !== '') {
-      const searchProduct = listProduct.filter(
+      const searchProduct = listSearchItem.filter(
         (item) =>
-          item.item_basic.name
-            .trim()
-            .toLowerCase()
-            .indexOf(value.trim().toLowerCase()) !== -1
+          item.name.trim().toLowerCase().indexOf(value.trim().toLowerCase()) !==
+          -1
       );
       setListSearchProduct([...searchProduct]);
     } else {
@@ -77,7 +74,7 @@ function HomePage() {
     }
   }
 
-  const sorting = (value) => {
+  const onSorting = (value) => {
     const newIconSorts = iconSortObject(iconSort, value);
     setIconSort(newIconSorts);
     const newIconSort = filterIconSort(newIconSorts, value);
@@ -102,13 +99,14 @@ function HomePage() {
           showLoading();
           const promises = [];
           const response = await productsApi.searchItem(filter, idBear.id);
-          for (let i = 0; i < response.items.length; i += 1) {
-            if (typeof response.items[i].ratings === 'undefined') {
-              promises.push(productsApi.cmtSearchItem(response.items[i]));
+          for (let i = 0; i < response.length; i += 1) {
+            if (typeof response[i].ratings === 'undefined') {
+              promises.push(productsApi.cmtSearchItem(response[i]));
             }
           }
           const dataCmt = await Promise.all(promises);
-          const newList = showInMonth(dataCmt, response);
+          const newList = showListProduct(dataCmt, response);
+
           setListSearchItem(newList);
           hideLoading();
         } catch (error) {
@@ -144,7 +142,7 @@ function HomePage() {
         currentPage={currentPage}
         onSetLimitProducts={onSetLimitProducts}
         ref={inputRef}
-        sorting={sorting}
+        onSorting={onSorting}
         iconSort={iconSort}
       />
     </>

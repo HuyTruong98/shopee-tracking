@@ -2,7 +2,6 @@
 import _ from 'lodash';
 
 export const arraySort = (items, iconSort, fieldSort) => {
-  console.log(fieldSort);
   switch (fieldSort) {
     case 'name':
       if (iconSort[fieldSort] === 1) {
@@ -10,7 +9,7 @@ export const arraySort = (items, iconSort, fieldSort) => {
           items,
           [
             (a) =>
-              a.item_basic.name
+              a.name
                 .toLowerCase()
                 .replaceAll('[\\-\\+\\.\\^:,]', ''),
             'name',
@@ -22,7 +21,7 @@ export const arraySort = (items, iconSort, fieldSort) => {
           items,
           [
             (a) =>
-              a.item_basic.name
+              a.name
                 .toLowerCase()
                 .replaceAll('[\\-\\+\\.\\^:,]', ''),
             'name',
@@ -33,15 +32,15 @@ export const arraySort = (items, iconSort, fieldSort) => {
     case 'price':
       if (iconSort[fieldSort] === 1) {
         return items.sort((a, b) => {
-          const numberA = Number(a.item_basic.price.toString().slice(0, 7));
-          const numberB = Number(b.item_basic.price.toString().slice(0, 7));
+          const numberA = Number(a.price.toString().slice(0, 7));
+          const numberB = Number(b.price.toString().slice(0, 7));
 
           return parseInt(numberA, 10) - parseInt(numberB, 10);
         });
       } else {
         return items.sort((a, b) => {
-          const numberA = Number(a.item_basic.price.toString().slice(0, 7));
-          const numberB = Number(b.item_basic.price.toString().slice(0, 7));
+          const numberA = Number(a.price.toString().slice(0, 7));
+          const numberB = Number(b.price.toString().slice(0, 7));
 
           return parseFloat(numberB) - parseFloat(numberA);
         });
@@ -51,21 +50,21 @@ export const arraySort = (items, iconSort, fieldSort) => {
         return items.sort((a, b) => {
           const percent = '%';
           const indexA =
-            a.item_basic.discount !== null
-              ? a.item_basic.discount.indexOf(percent)
+            a.discount !== null
+              ? a.discount.indexOf(percent)
               : 0;
           const indexB =
-            b.item_basic.discount !== null
-              ? b.item_basic.discount.indexOf(percent)
+            b.discount !== null
+              ? b.discount.indexOf(percent)
               : 0;
           const numberA = Number(
-            a.item_basic.discount !== null
-              ? a.item_basic.discount.slice(0, indexA)
+            a.discount !== null
+              ? a.discount.slice(0, indexA)
               : 0
           );
           const numberB = Number(
-            b.item_basic.discount !== null
-              ? b.item_basic.discount.slice(0, indexB)
+            b.discount !== null
+              ? b.discount.slice(0, indexB)
               : 0
           );
           return parseFloat(numberA) - parseFloat(numberB);
@@ -74,21 +73,21 @@ export const arraySort = (items, iconSort, fieldSort) => {
         return items.sort((a, b) => {
           const percent = '%';
           const indexA =
-            a.item_basic.discount !== null
-              ? a.item_basic.discount.indexOf(percent)
+            a.discount !== null
+              ? a.discount.indexOf(percent)
               : 0;
           const indexB =
-            b.item_basic.discount !== null
-              ? b.item_basic.discount.indexOf(percent)
+            b.discount !== null
+              ? b.discount.indexOf(percent)
               : 0;
           const numberA = Number(
-            a.item_basic.discount !== null
-              ? a.item_basic.discount.slice(0, indexA)
+            a.discount !== null
+              ? a.discount.slice(0, indexA)
               : 0
           );
           const numberB = Number(
-            b.item_basic.discount !== null
-              ? b.item_basic.discount.slice(0, indexB)
+            b.discount !== null
+              ? b.discount.slice(0, indexB)
               : 0
           );
           return parseFloat(numberB) - parseFloat(numberA);
@@ -97,28 +96,28 @@ export const arraySort = (items, iconSort, fieldSort) => {
     case 'sold':
       if (iconSort[fieldSort] === 1) {
         return items.sort((a, b) => {
-          const soldA = a.item_basic.sold;
-          const soldB = b.item_basic.sold;
+          const soldA = a.sold;
+          const soldB = b.sold;
           return parseFloat(soldA) - parseFloat(soldB);
         });
       } else {
         return items.sort((a, b) => {
-          const soldA = a.item_basic.sold;
-          const soldB = b.item_basic.sold;
+          const soldA = a.sold;
+          const soldB = b.sold;
           return parseFloat(soldB) - parseFloat(soldA);
         });
       }
     case 'stock':
       if (iconSort[fieldSort] === 1) {
         return items.sort((a, b) => {
-          const stockA = a.item_basic.stock;
-          const stockB = b.item_basic.stock;
+          const stockA = a.stock;
+          const stockB = b.stock;
           return parseFloat(stockA) - parseFloat(stockB);
         });
       } else {
         return items.sort((a, b) => {
-          const stockA = a.item_basic.stock;
-          const stockB = b.item_basic.stock;
+          const stockA = a.stock;
+          const stockB = b.stock;
           return parseFloat(stockB) - parseFloat(stockA);
         });
       }
@@ -156,42 +155,42 @@ export const arraySort = (items, iconSort, fieldSort) => {
       if (iconSort[fieldSort] === 1) {
         return items.sort(
           (a, b) =>
-            parseFloat(a.item_basic.cmt_count) -
-            parseFloat(b.item_basic.cmt_count)
+            parseFloat(a.cmt_count) -
+            parseFloat(b.cmt_count)
         );
       } else {
         return items.sort(
           (a, b) =>
-            parseFloat(b.item_basic.cmt_count) -
-            parseFloat(a.item_basic.cmt_count)
+            parseFloat(b.cmt_count) -
+            parseFloat(a.cmt_count)
         );
       }
     case 'liked':
       if (iconSort[fieldSort] === 1) {
         return items.sort(
           (a, b) =>
-            parseFloat(a.item_basic.liked_count) -
-            parseFloat(b.item_basic.liked_count)
+            parseFloat(a.liked_count) -
+            parseFloat(b.liked_count)
         );
       } else {
         return items.sort(
           (a, b) =>
-            parseFloat(b.item_basic.liked_count) -
-            parseFloat(a.item_basic.liked_count)
+            parseFloat(b.liked_count) -
+            parseFloat(a.liked_count)
         );
       }
     case 'rating':
       if (iconSort[fieldSort] === 1) {
         return items.sort(
           (a, b) =>
-            parseFloat(Math.ceil(a.item_basic.item_rating.rating_star)) -
-            parseFloat(Math.ceil(b.item_basic.item_rating.rating_star))
+            parseFloat(Math.ceil(a.rating_star)) -
+            parseFloat(Math.ceil(b.rating_star))
         );
       } else {
         return items.sort(
           (a, b) =>
-            parseFloat(Math.ceil(b.item_basic.item_rating.rating_star)) -
-            parseFloat(Math.ceil(a.item_basic.item_rating.rating_star))
+            parseFloat(Math.ceil(b.rating_star)) -
+            parseFloat(Math.ceil(a.rating_star))
         );
       }
     default:

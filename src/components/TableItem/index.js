@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-no-duplicate-props */
-import moment from 'moment';
 import React, { forwardRef } from 'react';
 import { APP_API_IMAGE } from '../../configs';
+import { convertPrice } from '../../utils/string';
 import Pagination from '../Pagination';
 import tableHeads from './data/tableHeads';
 
@@ -15,27 +15,11 @@ function TableItem(
     pageCount,
     currentPage,
     onSetLimitProducts,
-    sorting,
+    onSorting,
     iconSort,
   },
   ref
 ) {
-  function showPrice(value) {
-    const number = value.price.toString();
-    return number
-      .slice(0, 7)
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-      .concat(value.currency);
-  }
-
-  function showRevenue(value) {
-    const revenue = value.showRevenue
-    return revenue
-      .toString()
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-      .concat(value.item_basic.currency);
-  }
-
   function handleChangeLimit(e) {
     const number = Number(e.target.value);
     onSetLimitProducts(number);
@@ -45,12 +29,12 @@ function TableItem(
     onChangeListSearch(e.target.value);
   }
 
-  const RenderTableHeads = () => {
+  function RenderTableHeads() {
     return tableHeads.map((tableHead, tableHeadKey) => {
       return (
         <th
           key={tableHeadKey}
-          onClick={() => (tableHead.isSorting ? sorting(tableHead.type) : {})}
+          onClick={() => (tableHead.isSorting ? onSorting(tableHead.type) : {})}
           className={
             tableHead.isSorting
               ? iconSort[tableHead.type] !== 0
@@ -65,7 +49,8 @@ function TableItem(
         </th>
       );
     });
-  };
+  }
+
   return (
     <>
       <div className="title-page">Shopee Tracking</div>
@@ -117,24 +102,31 @@ function TableItem(
                 return (
                   <tr key={indexProduct}>
                     <td>{indexProduct + 1}</td>
-                    <td>{itemProduct.item_basic.name}</td>
-                    <td>{showPrice(itemProduct.item_basic)}</td>
-                    <td>{itemProduct.item_basic.discount}</td>
-                    <td>{itemProduct.item_basic.sold}</td>
-                    <td>{itemProduct.item_basic.stock}</td>
-                    <td>{itemProduct.showInMonth}</td>
-                    <td>{itemProduct.showFirstPost}</td>
-                    <td>{showRevenue(itemProduct)}</td>
-                    <td>{itemProduct.item_basic.cmt_count}</td>
-                    <td>{itemProduct.item_basic.liked_count}</td>
+                    <td>{itemProduct.name}</td>
                     <td>
-                      {Math.ceil(
-                        itemProduct.item_basic.item_rating.rating_star
+                      {convertPrice(
+                        itemProduct.price,
+                        itemProduct.currency,
+                        true
                       )}
                     </td>
+                    <td>{itemProduct.discount}</td>
+                    <td>{itemProduct.sold}</td>
+                    <td>{itemProduct.stock}</td>
+                    <td>{itemProduct.showInMonth}</td>
+                    <td>{itemProduct.showFirstPost}</td>
+                    <td>
+                      {convertPrice(
+                        itemProduct.showRevenue,
+                        itemProduct.currency,
+                      )}
+                    </td>
+                    <td>{itemProduct.cmt_count}</td>
+                    <td>{itemProduct.liked_count}</td>
+                    <td>{Math.ceil(itemProduct.rating_star)}</td>
                     <td>
                       <img
-                        src={`${APP_API_IMAGE}/${itemProduct.item_basic.image}`}
+                        src={`${APP_API_IMAGE}/${itemProduct.image}`}
                         style={{ width: '50px', height: '50px' }}
                       />
                     </td>
