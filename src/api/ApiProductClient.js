@@ -14,7 +14,9 @@ const productsApi = {
       })
       .catch((error) => {
         if (error) {
-          console.log(error);
+          localStorage.removeItem('USER');
+          localStorage.removeItem('ACCESSTOKEN');
+          localStorage.removeItem('REFRESHTOKEN');
         }
       });
   },

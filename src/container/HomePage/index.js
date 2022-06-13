@@ -2,15 +2,17 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
 import TableItem from '../../components/TableItem';
+import { LOGIN_PAGE } from '../../configs';
 import useLoading from '../../hooks/userLoading';
 import { arraySort } from '../../utils/array';
-import { iconSortObject } from '../../utils/sortIcon';
 import { filterIconSort } from '../../utils/fiterIconSort';
 import { pagination } from '../../utils/pagination';
 import { showListProduct } from '../../utils/showListProduct';
+import { iconSortObject } from '../../utils/sortIcon';
 
 function HomePage() {
   const isFirst = useRef(true);
@@ -22,6 +24,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limitProducts, setLimitProducts] = useState(10);
   const [pageCount, setPageCount] = useState(1);
+  const navigate = useNavigate();
   const [filter, setFilter] = useState({
     by: 'relevancy',
     limit: 100,
@@ -112,6 +115,8 @@ function HomePage() {
         } catch (error) {
           showLoading();
           console.log('Failed to Fetch Product', error);
+          navigate(LOGIN_PAGE);
+          hideLoading();
         }
       };
       getProductSearch();

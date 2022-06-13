@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import login from '../../api/ApiLoginClient';
 import { HOME_PAGE } from '../../configs';
 import useLoading from '../../hooks/userLoading';
+import { toast } from 'react-toastify';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -53,8 +54,12 @@ export default function LoginPage() {
         navigate(HOME_PAGE);
         hideLoading();
       } catch (error) {
+        console.log(error, 'Incorrect email or password !');
         showLoading();
-        console.log(error);
+        toast.error('Incorrect email or password !', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        hideLoading();
       }
     };
     loginUser();
@@ -99,7 +104,9 @@ export default function LoginPage() {
         <button className="btn btn-lg btn-primary btn-block" type="submit">
           Sign in
         </button>
-        <p className="mt-5 mb-3 text-muted text-center">&copy; Cryptizen</p>
+        <p className="mt-5 mb-3 text-muted text-center">
+          &copy; <i>AFFCODER</i>
+        </p>
       </form>
     </div>
   );
