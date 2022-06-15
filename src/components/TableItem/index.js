@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable react/jsx-no-duplicate-props */
 import React, { forwardRef } from 'react';
 import { APP_API_IMAGE } from '../../configs';
 import { convertPrice } from '../../utils/string';
@@ -17,6 +15,7 @@ function TableItem(
     onSetLimitProducts,
     onSorting,
     iconSort,
+    totalTable,
   },
   ref
 ) {
@@ -49,6 +48,23 @@ function TableItem(
         </th>
       );
     });
+  }
+
+  function RenderTableToTal() {
+    return (
+      <tr style={{ textAlign: 'center' }}>
+        <th>Tổng </th>
+        <th>Trong tháng: {totalTable.totalShowInMonth}</th>
+        <th>Đã bán: {totalTable?.sold}</th>
+        <th>Tồn: {totalTable?.stock}</th>
+        <th>Like: {totalTable?.liked_count}</th>
+        <th>Comment: {totalTable?.cmt_count}</th>
+        <th>
+          Rating:{' '}
+          {totalTable.rating_star ? Math.ceil(totalTable?.rating_star) : ''}
+        </th>
+      </tr>
+    );
   }
 
   return (
@@ -93,6 +109,17 @@ function TableItem(
             style={{ width: '100%', marginTop: '30px' }}
           >
             <thead>
+              <RenderTableToTal />
+            </thead>
+          </table>
+          <table
+            id="dtOrderExample"
+            class="table table-striped table-bordered table-sm"
+            cellspacing="0"
+            width="100%"
+            style={{ width: '100%', marginTop: '30px' }}
+          >
+            <thead>
               <tr>
                 <RenderTableHeads />
               </tr>
@@ -118,7 +145,7 @@ function TableItem(
                     <td>
                       {convertPrice(
                         itemProduct.showRevenue,
-                        itemProduct.currency,
+                        itemProduct.currency
                       )}
                     </td>
                     <td>{itemProduct.cmt_count}</td>

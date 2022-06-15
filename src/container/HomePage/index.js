@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
@@ -13,10 +13,12 @@ import { filterIconSort } from '../../utils/fiterIconSort';
 import { pagination } from '../../utils/pagination';
 import { showListProduct } from '../../utils/showListProduct';
 import { iconSortObject } from '../../utils/sortIcon';
+import { totalMonth } from '../../utils/totalShowInMonth';
 
 function HomePage() {
   const isFirst = useRef(true);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
   const [showLoading, hideLoading] = useLoading();
   const [listProduct, setLisProduct] = useState([]);
   const [listSearchItem, setListSearchItem] = useState([]);
@@ -24,11 +26,11 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limitProducts, setLimitProducts] = useState(10);
   const [pageCount, setPageCount] = useState(1);
-  const navigate = useNavigate();
+  const [totalTable, setTotalTable] = useState({});
   const [filter, setFilter] = useState({
     by: 'relevancy',
     limit: 100,
-    newest: 100,
+    newest: 0,
     order: 'desc',
     page_type: 'search',
     scenario: 'PAGE_GLOBAL_SEARCH',
@@ -102,15 +104,19 @@ function HomePage() {
           showLoading();
           const promises = [];
           const response = await productsApi.searchItem(filter, idBear.id);
-          for (let i = 0; i < response.length; i += 1) {
-            if (typeof response[i].ratings === 'undefined') {
-              promises.push(productsApi.cmtSearchItem(response[i]));
+          for (let i = 0; i < response.data.length; i += 1) {
+            if (typeof response.data[i].ratings === 'undefined') {
+              promises.push(productsApi.cmtSearchItem(response.data[i]));
             }
           }
           const dataCmt = await Promise.all(promises);
-          const newList = showListProduct(dataCmt, response);
+          
+          const newList = showListProduct(dataCmt, response.data);
 
+          const showMonth = totalMonth(newList, response.total);
+        
           setListSearchItem(newList);
+          setTotalTable(showMonth);
           hideLoading();
         } catch (error) {
           showLoading();
@@ -149,6 +155,7 @@ function HomePage() {
         ref={inputRef}
         onSorting={onSorting}
         iconSort={iconSort}
+        totalTable={totalTable}
       />
     </>
   );

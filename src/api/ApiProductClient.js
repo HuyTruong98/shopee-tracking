@@ -1,5 +1,6 @@
 import axiosClient from './ApiAxiosClient';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
 
 const productsApi = {
   searchItem: (params, id) => {
@@ -14,6 +15,9 @@ const productsApi = {
       })
       .catch((error) => {
         if (error) {
+          toast.error('Get Data Failed!', {
+            position: toast.POSITION.TOP_RIGHT,
+          });
           localStorage.removeItem('USER');
           localStorage.removeItem('ACCESSTOKEN');
           localStorage.removeItem('REFRESHTOKEN');

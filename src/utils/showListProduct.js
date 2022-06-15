@@ -32,19 +32,14 @@ export function showListProduct(dataCmt, response) {
         const a = moment([presentYear, presentMonth - 1, presentDay]);
         const b = moment([pastYear, pastMonth - 1, pastDay]);
 
-        const strPrice = Number(
-          itemList.price.toString().slice(0, 7)
-        );
+        const strPrice = Number(itemList.price.toString().slice(0, 7));
 
         const revenue = strPrice * itemList.sold;
 
         const newValue = {
           ...itemList,
           showInMonth: arrList
-            ? Math.ceil(
-              (itemList.sold / itemList.cmt_count) *
-              arrList.length
-            )
+            ? Math.ceil((itemList.sold / itemList.cmt_count) * arrList.length)
             : 0,
           showFirstPost: a.diff(b, 'days'),
           showRevenue: revenue,

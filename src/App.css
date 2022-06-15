@@ -99,3 +99,15 @@ tbody td {
 tbody tr:hover {
   background-color: #eee;
 }
+
+.all {
+  width: 100%;
+  border: 1px solid black;
+  margin-top: 20px;
+}
+
+.all-how-many {
+  text-align: center;
+  margin: 20px;
+  padding: 5px;
+}
