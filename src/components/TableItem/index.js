@@ -54,14 +54,17 @@ function TableItem(
     return (
       <tr style={{ textAlign: 'center' }}>
         <th>Tổng </th>
-        <th>Trong tháng: {totalTable.totalShowInMonth}</th>
-        <th>Đã bán: {totalTable?.sold}</th>
-        <th>Tồn: {totalTable?.stock}</th>
-        <th>Like: {totalTable?.liked_count}</th>
-        <th>Comment: {totalTable?.cmt_count}</th>
+        <th>
+          Trong tháng:{' '}
+          {totalTable.totalShowInMonth ? totalTable.totalShowInMonth : 0}
+        </th>
+        <th>Đã bán: {totalTable.sold ? totalTable.sold : 0}</th>
+        <th>Tồn: {totalTable.stock ? totalTable.stock : 0}</th>
+        <th>Like: {totalTable.liked_count ? totalTable.liked_count : 0}</th>
+        <th>Comment: {totalTable.cmt_count ? totalTable.cmt_count : 0}</th>
         <th>
           Rating:{' '}
-          {totalTable.rating_star ? Math.ceil(totalTable?.rating_star) : ''}
+          {totalTable.rating_star ? Math.ceil(totalTable?.rating_star) : 0}
         </th>
       </tr>
     );
