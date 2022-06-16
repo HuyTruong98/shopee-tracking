@@ -14,13 +14,17 @@ const productsApi = {
         }
       })
       .catch((error) => {
-        if (error) {
-          toast.error('Get Data Failed!', {
+        if (error.response.status === 401) {
+          toast.error('Please authenticate!', {
             position: toast.POSITION.TOP_RIGHT,
           });
           localStorage.removeItem('USER');
           localStorage.removeItem('ACCESSTOKEN');
           localStorage.removeItem('REFRESHTOKEN');
+        } else if (error.response.status === 400) {
+          toast.error('Get Data Failed, Please wait 15 minutes!', {
+            position: toast.POSITION.TOP_RIGHT,
+          });
         }
       });
   },
