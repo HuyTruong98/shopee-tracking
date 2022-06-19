@@ -54,17 +54,16 @@ function TableItem(
     return (
       <tr style={{ textAlign: 'center' }}>
         <th>Tổng </th>
+        <th>Trong tháng: {totalTable.sold ? totalTable.sold : 0}</th>
         <th>
-          Trong tháng:{' '}
-          {totalTable.totalShowInMonth ? totalTable.totalShowInMonth : 0}
+          Đã bán: {totalTable.historical_sold ? totalTable.historical_sold : 0}
         </th>
-        <th>Đã bán: {totalTable.sold ? totalTable.sold : 0}</th>
-        <th>Tồn: {totalTable.stock ? totalTable.stock : 0}</th>
+        <th>Trong kho: {totalTable.stock ? totalTable.stock : 0}</th>
         <th>Like: {totalTable.liked_count ? totalTable.liked_count : 0}</th>
         <th>Comment: {totalTable.cmt_count ? totalTable.cmt_count : 0}</th>
         <th>
           Rating:{' '}
-          {totalTable.rating_star ? Math.ceil(totalTable?.rating_star) : 0}
+          {totalTable.rating_star ? totalTable?.rating_star.toFixed(2) : 0}
         </th>
       </tr>
     );
@@ -141,9 +140,9 @@ function TableItem(
                       )}
                     </td>
                     <td>{itemProduct.discount}</td>
-                    <td>{itemProduct.sold}</td>
+                    <td>{itemProduct.historical_sold}</td>
                     <td>{itemProduct.stock}</td>
-                    <td>{itemProduct.showInMonth}</td>
+                    <td>{itemProduct.sold}</td>
                     <td>{itemProduct.showFirstPost}</td>
                     <td>
                       {convertPrice(
@@ -153,7 +152,7 @@ function TableItem(
                     </td>
                     <td>{itemProduct.cmt_count}</td>
                     <td>{itemProduct.liked_count}</td>
-                    <td>{Math.ceil(itemProduct.rating_star)}</td>
+                    <td>{parseFloat(itemProduct.rating_star).toFixed(2)}</td>
                     <td>
                       <img
                         src={`${APP_API_IMAGE}/${itemProduct.image}`}

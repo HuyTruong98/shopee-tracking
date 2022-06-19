@@ -25,7 +25,7 @@ const tableHeads = [
     isSorting: true,
   },
   {
-    title: 'Tồn',
+    title: 'Trong kho',
     type: 'stock',
     isSorting: true,
   },

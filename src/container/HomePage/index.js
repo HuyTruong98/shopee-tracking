@@ -102,21 +102,10 @@ function HomePage() {
       const getProductSearch = async () => {
         try {
           showLoading();
-          const promises = [];
           const response = await productsApi.searchItem(filter, idBear.id);
-          for (let i = 0; i < response.data.length; i += 1) {
-            if (typeof response.data[i].ratings === 'undefined') {
-              promises.push(productsApi.cmtSearchItem(response.data[i]));
-            }
-          }
-          const dataCmt = await Promise.all(promises);
-          
-          const newList = showListProduct(dataCmt, response.data);
-
-          const showMonth = totalMonth(newList, response.total);
-        
+          const newList = showListProduct(response.data);
           setListSearchItem(newList);
-          setTotalTable(showMonth);
+          setTotalTable(response.total);
           hideLoading();
         } catch (error) {
           showLoading();

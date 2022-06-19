@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import OverLayProvider from './components/OverLay/provider';
@@ -8,7 +8,6 @@ import ProtectedRoute from './configs/ProtedRouter';
 import HomePage from './container/HomePage';
 import LoginPage from './container/LoginPage';
 import NotFoundPage from './container/NotFoundPage';
-import { ToastContainer } from 'react-toastify';
 
 function App() {
   const r = [
@@ -32,10 +31,6 @@ function App() {
     },
   ];
 
-  useEffect(() => {
-    localStorage.getItem('ACCESSTOKEN');
-    localStorage.getItem('REFRESHTOKEN');
-  }, []);
   return (
     <OverLayProvider>
       <ToastContainer />
