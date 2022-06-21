@@ -24,23 +24,4 @@ axiosClient.interceptors.request.use(
   }
 );
 
-// axiosClient.interceptors.response.use(
-//   (response) => {
-//     if (response && response.data) {
-//       return response.data;
-//     }
-//     return response;
-//   },
-//   (error) => {
-//     if (error.response && error.response.status === 401) {
-//       console.log(error);
-//       <Navigate to="/" replace />;
-//       // store.dispatch();
-//       // dispatch logout
-//     }
-//     // Handle errors
-//     throw error;
-//   }
-// );
-
 export default axiosClient;
