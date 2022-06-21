@@ -9,11 +9,11 @@ import TableItem from '../../components/TableItem';
 import { LOGIN_PAGE } from '../../configs';
 import useLoading from '../../hooks/userLoading';
 import { arraySort } from '../../utils/array';
+import { DuplicatesId } from '../../utils/Duplicates';
 import { filterIconSort } from '../../utils/fiterIconSort';
 import { pagination } from '../../utils/pagination';
 import { showListProduct } from '../../utils/showListProduct';
 import { iconSortObject } from '../../utils/sortIcon';
-import { totalMonth } from '../../utils/totalShowInMonth';
 
 function HomePage() {
   const isFirst = useRef(true);
@@ -104,7 +104,8 @@ function HomePage() {
           showLoading();
           const response = await productsApi.searchItem(filter, idBear.id);
           const newList = showListProduct(response.data);
-          setListSearchItem(newList);
+          const arrRemoveDuplicate = DuplicatesId(newList);
+          setListSearchItem(arrRemoveDuplicate);
           setTotalTable(response.total);
           hideLoading();
         } catch (error) {
