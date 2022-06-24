@@ -6,12 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import productsApi from '../../api/ApiProductClient';
 import SearchBox from '../../components/SearchBox';
 import TableItem from '../../components/TableItem';
-import { LOGIN_PAGE } from '../../configs';
+import { ICON_SORT, QUERY_PARAMS } from '../../configs';
 import useLoading from '../../hooks/userLoading';
+import r from '../../routes/routes';
 import { arraySort } from '../../utils/array';
-import { DuplicatesId } from '../../utils/Duplicates';
+import { duplicatesId } from '../../utils/duplicates';
 import { filterIconSort } from '../../utils/fiterIconSort';
 import { pagination } from '../../utils/pagination';
+import { searchInTable } from '../../utils/searchInTable';
 import { showListProduct } from '../../utils/showListProduct';
 import { iconSortObject } from '../../utils/sortIcon';
 
@@ -27,30 +29,8 @@ function HomePage() {
   const [limitProducts, setLimitProducts] = useState(10);
   const [pageCount, setPageCount] = useState(1);
   const [totalTable, setTotalTable] = useState({});
-  const [filter, setFilter] = useState({
-    by: 'relevancy',
-    limit: 100,
-    newest: 0,
-    order: 'desc',
-    page_type: 'search',
-    scenario: 'PAGE_GLOBAL_SEARCH',
-    version: 2,
-    keyword: '',
-  });
-  const [iconSort, setIconSort] = useState({
-    name: 0,
-    price: 0,
-    discount: 0,
-    sold: 0,
-    stock: 0,
-    showRevenue: 0,
-    comment: 0,
-    liked: 0,
-    rating: 0,
-    priceRevenue: 0,
-    showFirstPost: 0,
-    showInMonth: 0,
-  });
+  const [filter, setFilter] = useState(QUERY_PARAMS);
+  const [iconSort, setIconSort] = useState(ICON_SORT);
 
   function onChangeCurrentPage(tempPage) {
     setCurrentPage(tempPage.selected + 1);
@@ -68,11 +48,7 @@ function HomePage() {
 
   function onChangeListSearch(value) {
     if (value !== '') {
-      const searchProduct = listSearchItem.filter(
-        (item) =>
-          item.name.trim().toLowerCase().indexOf(value.trim().toLowerCase()) !==
-          -1
-      );
+      const searchProduct = searchInTable(listSearchItem, value);
       setListSearchProduct([...searchProduct]);
     } else {
       setListSearchProduct([]);
@@ -104,14 +80,14 @@ function HomePage() {
           showLoading();
           const response = await productsApi.searchItem(filter, idBear.id);
           const newList = showListProduct(response.data);
-          const arrRemoveDuplicate = DuplicatesId(newList);
+          const arrRemoveDuplicate = duplicatesId(newList);
           setListSearchItem(arrRemoveDuplicate);
           setTotalTable(response.total);
           hideLoading();
         } catch (error) {
           showLoading();
           console.log('Failed to Fetch Product', error);
-          navigate(LOGIN_PAGE);
+          navigate(r.LOGIN_PAGE);
           hideLoading();
         }
       };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APP_API } from '../configs';
+import { ACCESSTOKEN, APP_API } from '../configs';
 
 const axiosClient = axios.create({
   baseURL: APP_API,
@@ -10,8 +10,8 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('ACCESSTOKEN')
-      ? localStorage.getItem('ACCESSTOKEN')
+    const token = localStorage.getItem(ACCESSTOKEN)
+      ? localStorage.getItem(ACCESSTOKEN)
       : null;
     if (!config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;

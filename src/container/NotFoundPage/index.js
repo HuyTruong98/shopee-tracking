@@ -1,5 +1,3 @@
-function NotFoundPage() {
-  return <div>NOT FOUND 404</div>;
+export default function NotFoundPage() {
+  return <div className="not-found-background" />;
 }
-
-export default NotFoundPage;

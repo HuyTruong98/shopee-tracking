@@ -1,9 +1,10 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React, { forwardRef } from 'react';
-import { APP_API_IMAGE } from '../../configs';
-import { convertPrice } from '../../utils/string';
+import { forwardRef } from 'react';
 import Pagination from '../Pagination';
+import ChangeEntries from './changeEntries/changeEntries';
+import RenderProduct from './data/renderProduct';
+import RenderTableToTal from './data/renderTableTotal';
 import tableHeads from './data/tableHeads';
+import SearchTable from './searchTable/searchTable';
 
 function TableItem(
   {
@@ -50,54 +51,17 @@ function TableItem(
     });
   }
 
-  function RenderTableToTal() {
-    return (
-      <tr style={{ textAlign: 'center' }}>
-        <th>Tổng </th>
-        <th>Trong tháng: {totalTable.sold ? totalTable.sold : 0}</th>
-        <th>
-          Đã bán: {totalTable.historical_sold ? totalTable.historical_sold : 0}
-        </th>
-        <th>Trong kho: {totalTable.stock ? totalTable.stock : 0}</th>
-        <th>Like: {totalTable.liked_count ? totalTable.liked_count : 0}</th>
-        <th>Comment: {totalTable.cmt_count ? totalTable.cmt_count : 0}</th>
-        <th>
-          Rating:{' '}
-          {totalTable.rating_star ? totalTable?.rating_star.toFixed(2) : 0}
-        </th>
-      </tr>
-    );
-  }
-
   return (
     <>
       <div className="title-page">Shopee Tracking</div>
       <div className="entries-search">
         <div className="entries">
           <div className="mr-2 mt-2">Show</div>
-          <select
-            name="example_length"
-            aria-controls="example"
-            class="form-control input-sm"
-            onChange={handleChangeLimit}
-            defaultValue="10"
-          >
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
+          <ChangeEntries handleChangeLimit={handleChangeLimit} />
           <div className="ml-2 mt-2">entries</div>
         </div>
         <div className="search-item-show">
-          <input
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-            className="form-control"
-            onChange={handleChangeList}
-            ref={ref}
-          />
+          <SearchTable handleChangeList={handleChangeList} ref={ref} />
         </div>
       </div>
       <div style={{ width: '100%', display: 'flex' }}>
@@ -111,7 +75,7 @@ function TableItem(
             style={{ width: '100%', marginTop: '30px' }}
           >
             <thead>
-              <RenderTableToTal />
+              <RenderTableToTal totalTable={totalTable} />
             </thead>
           </table>
           <table
@@ -127,50 +91,7 @@ function TableItem(
               </tr>
             </thead>
             <tbody>
-              {listProduct.map((itemProduct, indexProduct) => {
-                return (
-                  <tr key={indexProduct}>
-                    <td>{indexProduct + 1}</td>
-                    <td>{itemProduct.name}</td>
-                    <td>
-                      {convertPrice(
-                        itemProduct.price,
-                        itemProduct.currency,
-                        true
-                      )}
-                    </td>
-                    <td>{itemProduct.discount}</td>
-                    <td>{itemProduct.historical_sold}</td>
-                    <td>{itemProduct.stock}</td>
-                    <td>{itemProduct.sold}</td>
-                    <td>{itemProduct.showFirstPost}</td>
-                    <td>
-                      {convertPrice(
-                        itemProduct.showRevenue,
-                        itemProduct.currency
-                      )}
-                    </td>
-                    <td>{itemProduct.cmt_count}</td>
-                    <td>{itemProduct.liked_count}</td>
-                    <td>{parseFloat(itemProduct.rating_star).toFixed(2)}</td>
-                    <td>
-                      <img
-                        src={`${APP_API_IMAGE}/${itemProduct.image}`}
-                        style={{ width: '50px', height: '50px' }}
-                      />
-                    </td>
-                    <td>
-                      <a
-                        href={`https://shopee.vn/item-i.${itemProduct.shopid}.${itemProduct.itemid}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Xem
-                      </a>
-                    </td>
-                  </tr>
-                );
-              })}
+              <RenderProduct listProduct={listProduct} />
             </tbody>
           </table>
           <Pagination

@@ -26,17 +26,11 @@ export const arraySort = (items, iconSort, fieldSort) => {
     case 'price':
       if (iconSort[fieldSort] === 1) {
         return items.sort((a, b) => {
-          const numberA = Number(a.price.toString().slice(0, 7));
-          const numberB = Number(b.price.toString().slice(0, 7));
-
-          return parseInt(numberA, 10) - parseInt(numberB, 10);
+          return parseFloat(a.price) - parseFloat(b.price);
         });
       } else {
         return items.sort((a, b) => {
-          const numberA = Number(a.price.toString().slice(0, 7));
-          const numberB = Number(b.price.toString().slice(0, 7));
-
-          return parseFloat(numberB) - parseFloat(numberA);
+          return parseFloat(b.price) - parseFloat(a.price);
         });
       }
     case 'discount':

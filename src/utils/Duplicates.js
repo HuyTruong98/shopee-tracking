@@ -1,4 +1,4 @@
-export function DuplicatesId(arr) {
+export function duplicatesId(arr) {
   const duplicateId = new Set();
   const filterArr = arr.filter((item) => {
     const itemId = item.itemid;

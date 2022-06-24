@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { yupResolver } from '@hookform/resolvers/yup';
-import { React, useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import login from '../../api/ApiLoginClient';
-import { HOME_PAGE } from '../../configs';
+import { ACCESSTOKEN } from '../../configs';
 import useLoading from '../../hooks/userLoading';
-import { toast } from 'react-toastify';
+import r from '../../routes/routes';
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Please enter your email !'),
@@ -34,12 +35,12 @@ export default function LoginPage() {
   });
   const password = useRef({});
   const navigate = useNavigate();
-  const token = localStorage.getItem('ACCESSTOKEN') ?? null;
+  const token = localStorage.getItem(ACCESSTOKEN) ?? null;
   const [showLoading, hideLoading] = useLoading();
 
   useEffect(() => {
     if (token !== null) {
-      navigate(HOME_PAGE);
+      navigate(r.HOME_PAGE);
     }
   }, [token]);
 
@@ -51,7 +52,7 @@ export default function LoginPage() {
         showLoading();
         await login.loginUser(user);
         reset();
-        navigate(HOME_PAGE);
+        navigate(r.HOME_PAGE);
         hideLoading();
       } catch (error) {
         console.log(error, 'Incorrect email or password !');

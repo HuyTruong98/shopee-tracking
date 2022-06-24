@@ -1,19 +1,19 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import login from '../../api/ApiLoginClient';
-import { LOGIN_PAGE } from '../../configs';
+import { REFRESHTOKEN } from '../../configs';
+import r from '../../routes/routes';
 
 function SearchBox({ onFilter }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const refreshToken = localStorage.getItem('REFRESHTOKEN');
+  const refreshToken = localStorage.getItem(REFRESHTOKEN);
 
   function handleLogout() {
     const logOutUser = async () => {
       try {
         await login.logoutUser(refreshToken);
-        navigate(LOGIN_PAGE);
+        navigate(r.LOGIN_PAGE);
       } catch (error) {
         console.log('Log out fail', error);
       }
